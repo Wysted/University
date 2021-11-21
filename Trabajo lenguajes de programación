@@ -1,0 +1,258 @@
+#include<iostream>
+#include<string.h>
+#include<stdlib.h>
+#include<stdio.h>
+#include<vector>
+#define MAX 99
+using namespace std;
+
+void semantica();
+// & para saber la direccion de memoria
+
+void matrizTridiagonal();//Llama a las funciones crear matriz y imprimir matriz
+void crearMatriz(int orden,int x[MAX][MAX]);//Crea una matriz
+void imprimirMatriz(int orden,int x[MAX][MAX]);//Imprime la matriz que se le indicada
+void matrizUnidimensional(int orden, int x[MAX][MAX]);//Crea la matriz unidimensional ordenada por filas
+void conjunto();//LLama a a las funciones conjunto potencia y imprimir conjunto
+void conjuntoPotencia(int lim,string a[9]);//Crea un conjunto potencia con los datos entregados por consola
+void imprimirConjunto(int lim,string a[9]);//Imprime el conjunto potencia
+int potencia(int b, int e);//Potencia de un numero
+void imprimirConjuntosAux(int a);//Actua como auxiliar que sirve para imprimir el conjunto potencia
+
+void menu();
+
+int main(){
+
+    menu();
+
+    return 0;
+}
+
+void menu(){
+    setlocale(LC_CTYPE,"spanish");
+    int opc=4;
+    do{
+        cout<<"¿Cual funcion quieres ver?"<<endl;
+        cout<<"1.-Semantica"<<endl;
+        cout<<"2.-Matriz tridiagonal"<<endl;
+        cout<<"3.-Conjunto potencia"<<endl;
+        cout<<"4.-Salir"<<endl;
+        cout<<"Digite su opción: ";cin>>opc;
+
+        switch(opc){
+            case 1: semantica();
+                    cout<<endl;
+
+                break;
+            case 2: matrizTridiagonal();
+                    cout<<endl;
+                break;
+            case 3: conjunto();
+                    cout<<endl;
+
+                break;
+
+        }
+    system("pause");
+    system("cls");
+    }while(opc !=4);
+}
+
+void semantica(){
+    //Semantica de copia y Semantica de punteros
+    int num1,num2 = 10;
+    //Si el valor es el mismo se pueden almacenar en el mismo lugar de memoria
+    num1 = num2;
+
+    cout<<"Semantica de copia resultado"<<endl<<num1<<endl;//Semantica de copia
+
+    int a = 20, *dir_a = &a, b;
+
+    b = *dir_a;
+
+    cout<<"Semantica de punteros resultado"<<endl<<a<<" "<<b<<endl;//Semantica de punteros
+}
+
+void matrizTridiagonal(){
+    int matriz[MAX][MAX];
+    int orden;
+    char opc;
+    cout<<"Ingrese orden de matriz: ";cin>>orden;
+        crearMatriz(orden,matriz);
+    cout<<"Quieres mostrar la matriz creada s/n ";cin>>opc;
+    if(opc == 's'){
+        imprimirMatriz(orden,matriz);
+    }
+    cout<<"Quieres mostrar la matriz unidimensional s/n ";cin>>opc;
+    if(opc == 's'){
+        matrizUnidimensional(orden,matriz);
+    }
+
+
+}
+
+void crearMatriz(int orden,int x[MAX][MAX]){//Crea una matriz con numero por defecto 0
+
+    //Crea la primera diagonal donde las filas y columnas(i y j) sean el mismo numero
+    cout<<"Ingresar datos primera diagonal"<<endl;
+    for(int i=0; i<orden;i++){
+        for(int j=0;j<orden;j++){
+            if(i==j){
+                cout<<"x["<<i<<"]["<<j<<"]: ";
+                cin>>x[i][j];
+            }
+        }
+    }
+    //Crea la segunda diagonal donde i sumado a j es igual al orden de la matriz menos 1
+    cout<<"Ingresar datos segunda diagonal"<<endl;
+    for(int i=0; i<orden;i++){
+        for(int j=0;j<orden;j++){
+            if( i+j==orden-1 && i!=j){
+                cout<<"x["<<i<<"]["<<j<<"]: ";
+                cin>>x[i][j];
+            }
+        }
+    }
+}
+
+void imprimirMatriz(int orden,int x[MAX][MAX]){
+
+     for(int i=0; i<orden;i++){
+        for(int j=0;j<orden;j++){
+            cout<<x[i][j]<<"\t";
+        }
+     cout<<endl;
+    }
+
+}
+
+void matrizUnidimensional(int orden, int x[MAX][MAX]){
+    //Crea e ingresa el dato sobre tamaño para una matriz unidimensional con el tamaño correspondiente
+    int aux,xs=0;
+    if(orden % 2 == 0){
+        aux = orden * 2;
+    }else{
+        aux = orden * 2 - 1;
+    }
+
+    //Crea una matriz unidimensional
+    int matrizUnidimensional[aux];
+    //Va ingresando los datos al arreglo unidimensional, por filas omitiendo los numeros por defectos(0)
+    for(int i=0;i<orden;i++){
+        for(int j=0;j<orden;j++){
+            if(x[i][j]!=0){
+                matrizUnidimensional[xs]=x[i][j];
+                xs++;
+            }
+        }
+    }
+
+    for(int i=0;i<aux;i++){
+        cout<<matrizUnidimensional[i]<<" ";
+    }
+}
+
+int potencia(int b, int e){
+
+    int pot=1;
+    for(int i=1;i<=e;i++){
+        pot=pot*b;
+    }
+    return pot;
+}
+
+void conjuntoPotencia(int lim,string a[9]){
+
+    for(int i=0;i<lim;i++){
+        cout<<"Ingrese el elemento "<<i+1<<": ";
+        cin>>a[i];
+    }
+}
+
+void imprimirConjunto(int lim,string a[9]){
+
+    string s = "";
+    vector<string> v;
+    string aux = "";
+
+    for(int i=0;i<potencia(2,lim);i++){//Va ordenando el conjuto y guarda los subconjuntos en un vector string
+        for(int j=0;j<lim;j++){
+            if( i & (1<<j)){
+                s = aux + a[j];
+            }
+            aux = s;
+
+        }
+        v.push_back(s);
+        aux="";
+        s = "";
+
+    }
+
+    vector<int> conjuntoInt;
+    for(int i=0;i<v.size();i++){//transforma los datos del vector<string> en entero y los guarda en un vector<int>
+        conjuntoInt.push_back(atoi(v[i].c_str()));
+    }
+
+ 	int i,pos,aux2;
+
+ 	for(i=0;i<conjuntoInt.size();i++){//Ordenamiento tipo por insercion de menor a mayor
+ 		pos = i;
+ 		aux2 = conjuntoInt[i];
+ 		while((pos>0)&&(aux2<conjuntoInt[pos-1])){
+ 			conjuntoInt[pos]=conjuntoInt[pos-1];
+ 			pos--;
+ 		}
+
+ 		conjuntoInt[pos]=aux2;
+ 	}
+
+    cout<<"{ ";
+    for(int i=0;i<conjuntoInt.size();i++){
+      imprimirConjuntosAux(conjuntoInt[i]);
+    }
+    cout<<" }";
+}
+
+void conjunto(){//Funcion general que llama a dos funciones
+    int lim;
+    string a[9];
+    do{
+    cout<<"Ingrese el numero de elementos del conjunto(1 al 9): ";
+    cin>>lim;
+    }while(lim>=10);
+    conjuntoPotencia(lim,a);
+    imprimirConjunto(lim,a);
+}
+
+void imprimirConjuntosAux(int a){
+
+    if(a<10){
+        cout<<"{"<<a<<"}";
+    }
+    else if(a<100){
+        cout<<"{"<<a/10<<","<<a%10<<"}";
+    }
+    else if(a<1000){
+        cout<<"{"<<a/100<<","<<(a/10)%10<<","<<a%10 <<"}";
+    }
+    else if(a<10000){
+        cout<<"{"<<a/1000<<","<<(a/100)%10<<","<<(a/10)%10<<","<<a%10  <<"}";
+    }
+    else if(a<100000){
+        cout<<"{"<<a/10000<<","<<(a/1000)%10<<","<<(a/100)%10<<","<<(a/10)%10<<","<<a%10 <<"}";
+    }
+    else if(a<1000000){
+        cout<<"{"<<a/100000<<","<<(a/10000)%10<<","<<(a/1000)%10<<","<<(a/100)%10<<","<<(a/10)%10<<","<<a%10<<"}";
+    }
+    else if(a<10000000){
+        cout<<"{"<<a/1000000<<","<<(a/100000)%10<<","<<(a/10000)%10<<","<<(a/1000)%10<<","<<(a/100)%10<<","<<(a/10)%10<<","<<a%10<<"}";
+    }
+    else if(a<100000000){
+        cout<<"{"<<a/10000000<<","<<(a/1000000)%10<<","<<(a/100000)%10<<","<<(a/10000)%10<<","<<(a/1000)%10<<","<<(a/100)%10<<","<<(a/10)%10<<","<<a%10<<"}";
+
+    }
+    else if(a<10000000000){
+        cout<<"{"<<a/100000000<<","<<(a/10000000)%10<<","<<(a/1000000)%10<<","<<(a/100000)%10<<","<<(a/10000)%10<<","<<(a/1000)%10<<","<<(a/100)%10<<","<<(a/10)%10<<","<<a%10<<"}";
+    }
+}
